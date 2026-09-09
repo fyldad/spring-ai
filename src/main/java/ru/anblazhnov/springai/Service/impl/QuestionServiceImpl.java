@@ -23,11 +23,11 @@ public class QuestionServiceImpl implements QuestionService {
     public Answer askQuestion(Question question) {
 
         String answerText = chatClient.prompt()
-                .user(spec -> spec
+                .system(spec -> spec
                         .text(masterTemplate)
                         .param("scope", question.scope())
-                        .param("question", question.question())
                 )
+                .user(question.question())
                 .call()
                 .content();
 
