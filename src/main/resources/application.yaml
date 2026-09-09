@@ -1,0 +1,12 @@
+spring:
+  application.name: spring-ai
+  ai:
+    gigachat:
+      auth:
+        bearer:
+          api-key: ${GIGACHAT_API_KEY}
+        scope: gigachat_api_pers
+        certs:
+          ca-certs: ${GIGACHAT_CA_CERT}
+      chat:
+        temperature: 0.0
