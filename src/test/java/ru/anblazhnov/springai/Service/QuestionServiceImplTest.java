@@ -46,7 +46,7 @@ class QuestionServiceImplTest {
     @Test
     void askQuestion() {
         QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl(chatClientBuilder);
-        Answer answer = questionServiceImpl.askQuestion(new Question("hello"));
+        Answer answer = questionServiceImpl.askQuestion(new Question("test", "hello"));
 
         Assertions.assertNotNull(answer);
         Assertions.assertEquals("hello", answer.answer());

@@ -49,7 +49,7 @@ class EvaluatorQuestionServiceImplTest {
     @Test
     void evaluateRelevancy() {
         String userText = "Why is the sky blue?";
-        Question question = new Question(userText);
+        Question question = new Question("sky", userText);
         Answer answer = questionServiceImpl.askQuestion(question);
 
         EvaluationRequest request = new EvaluationRequest(userText, answer.answer());
@@ -71,7 +71,7 @@ class EvaluatorQuestionServiceImplTest {
     @Test
     public void evaluateFact() {
         String userText = "Why is the sky blue?";
-        Question question = new Question(userText);
+        Question question = new Question("sky", userText);
         Answer answer = questionServiceImpl.askQuestion(question);
 
         EvaluationRequest request = new EvaluationRequest(userText, answer.answer());
