@@ -4,23 +4,23 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import ru.anblazhnov.springai.Service.QuestionService;
-import ru.anblazhnov.springai.model.Answer;
+import reactor.core.publisher.Flux;
+import ru.anblazhnov.springai.Service.QuestionStreamService;
 import ru.anblazhnov.springai.model.Question;
 
 @Service
-public class QuestionServiceImpl implements QuestionService {
+public class QuestionStreamServiceImpl implements QuestionStreamService {
 
     private final ChatClient chatClient;
 
-    public QuestionServiceImpl(ChatClient.Builder chatClientBuilder) {
+    public QuestionStreamServiceImpl(ChatClient.Builder chatClientBuilder) {
         this.chatClient = chatClientBuilder.build();
     }
 
     @Value("classpath:/templates/masterTemplate.st")
     Resource masterTemplate;
 
-    public Answer askQuestion(Question question) {
+    public Flux<String> askQuestion(Question question) {
 
         return chatClient.prompt()
                 .system(spec -> spec
@@ -28,8 +28,8 @@ public class QuestionServiceImpl implements QuestionService {
                         .param("scope", question.scope())
                 )
                 .user(question.question())
-                .call()
-                .entity(Answer.class);
+                .stream()
+                .content();
     }
 
 }

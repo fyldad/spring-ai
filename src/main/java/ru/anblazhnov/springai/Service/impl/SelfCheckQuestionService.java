@@ -57,12 +57,12 @@ public class SelfCheckQuestionService implements QuestionService {
 
         evaluateRelevancy(question, answerText);
 
-        return new Answer(question.scope(), answerText);
+        return new Answer(question.scope(), answerText, null);
     }
 
     @Recover
     public Answer recover(AnswerNotRelevantException e) {
-        return new Answer(null, "I'm sorry, I wasn't able to answer the question.");
+        return new Answer(null, "I'm sorry, I wasn't able to answer the question.", null);
     }
 
     private void evaluateRelevancy(Question question, String answer) {
