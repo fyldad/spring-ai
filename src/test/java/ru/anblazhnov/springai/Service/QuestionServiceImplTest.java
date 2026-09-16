@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +34,8 @@ class QuestionServiceImplTest {
     Resource resource;
     @Autowired
     ChatClient.Builder chatClientBuilder;
+    @Autowired
+    VectorStore vectorStore;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -45,7 +48,7 @@ class QuestionServiceImplTest {
 
     @Test
     void askQuestion() {
-        QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl(chatClientBuilder);
+        QuestionServiceImpl questionServiceImpl = new QuestionServiceImpl(chatClientBuilder, vectorStore);
         Answer answer = questionServiceImpl.askQuestion(new Question("test", "hello"));
 
         Assertions.assertNotNull(answer);
