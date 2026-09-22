@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.anblazhnov.springai.Service.CompanyQuestionService;
 import ru.anblazhnov.springai.model.CompanyQuestion;
 
-import static org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor.FILTER_EXPRESSION;
+import static org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever.FILTER_EXPRESSION;
+
 
 @Service
 public class CompanyQuestionServiceImpl implements CompanyQuestionService {
