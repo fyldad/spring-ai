@@ -5,6 +5,7 @@ import org.springframework.ai.chat.client.advisor.ChatModelCallAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.client.advisor.api.BaseAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,11 +21,15 @@ public class SpringAiApplication {
     }
 
 
-//    @Bean
-//    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
-//        return chatClientBuilder
-//                .defaultAdvisors(QuestionAnswerAdvisor.builder(vectorStore).build())
-//                .build();
-//    }
+    @Bean
+    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
+        return chatClientBuilder
+                .defaultAdvisors(QuestionAnswerAdvisor.builder(vectorStore)
+                        .searchRequest(SearchRequest.builder()
+                                .topK(20)
+                                .build())
+                        .build())
+                .build();
+    }
 
 }
