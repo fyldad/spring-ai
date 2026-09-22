@@ -2,6 +2,7 @@ package ru.anblazhnov.springai;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.preretrieval.query.expansion.MultiQueryExpander;
 import org.springframework.ai.rag.preretrieval.query.transformation.RewriteQueryTransformer;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -27,7 +28,10 @@ public class SpringAiApplication {
                         .vectorStore(vectorStore)
                         .topK(20)
                         .build())
-                .queryTransformers(RewriteQueryTransformer.builder()
+//                .queryTransformers(RewriteQueryTransformer.builder()
+//                        .chatClientBuilder(chatClientBuilder.clone())
+//                        .build())
+                .queryExpander(MultiQueryExpander.builder()
                         .chatClientBuilder(chatClientBuilder.clone())
                         .build())
                 .build();
