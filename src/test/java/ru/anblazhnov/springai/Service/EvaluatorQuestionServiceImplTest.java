@@ -33,7 +33,7 @@
 //        final String prompt = """
 //				Evaluate whether or not the following claim is supported by the provided document.
 //				Respond with "yes" if the claim is supported, or "no" if it is not.
-//				Answer only yes or no without any additional text or symbols.
+//				Answer only yes or no without any additional text, descriptions or symbols.
 //
 //				Document:
 //				{document}
