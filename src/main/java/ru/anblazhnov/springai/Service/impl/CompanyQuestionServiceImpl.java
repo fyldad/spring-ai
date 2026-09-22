@@ -56,7 +56,7 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
 
         String expression = "scope == 'iflex'";
         if (question.module() != null) {
-            expression += " && module == " + question.module();
+            expression += " && module == '" + question.module() + "'";
         }
 
         return chatClientBuilder
