@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.anblazhnov.springai.Service.CompanyQuestionService;
 import ru.anblazhnov.springai.model.CompanyQuestion;
 
+import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 import static org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever.FILTER_EXPRESSION;
 
 
@@ -34,7 +35,9 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
                 )
                 .user(question.question())
                 .advisors(advisorSpec ->
-                        advisorSpec.param(FILTER_EXPRESSION, expression)
+                        advisorSpec
+                                .param(FILTER_EXPRESSION, expression)
+                                .param(CONVERSATION_ID, "1")
                 )
                 .call()
                 .content();

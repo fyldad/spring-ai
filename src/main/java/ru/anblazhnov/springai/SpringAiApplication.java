@@ -1,9 +1,10 @@
 package ru.anblazhnov.springai;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.preretrieval.query.expansion.MultiQueryExpander;
-import org.springframework.ai.rag.preretrieval.query.transformation.RewriteQueryTransformer;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.SpringApplication;
@@ -21,23 +22,24 @@ public class SpringAiApplication {
 
 
     @Bean
-    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
+    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore, ChatMemory chatMemory) {
 
-        RetrievalAugmentationAdvisor advisor = RetrievalAugmentationAdvisor.builder()
+        RetrievalAugmentationAdvisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
                 .documentRetriever(VectorStoreDocumentRetriever.builder()
                         .vectorStore(vectorStore)
                         .topK(20)
                         .build())
-//                .queryTransformers(RewriteQueryTransformer.builder()
-//                        .chatClientBuilder(chatClientBuilder.clone())
-//                        .build())
                 .queryExpander(MultiQueryExpander.builder()
                         .chatClientBuilder(chatClientBuilder.clone())
                         .build())
                 .build();
 
+        MessageChatMemoryAdvisor chatMemoryAdvisor = MessageChatMemoryAdvisor
+                .builder(chatMemory)
+                .build();
+
         return chatClientBuilder
-                .defaultAdvisors(advisor)
+                .defaultAdvisors(ragAdvisor, chatMemoryAdvisor)
                 .build();
     }
 
