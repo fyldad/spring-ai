@@ -2,7 +2,8 @@ package ru.anblazhnov.springai;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.memory.repository.neo4j.Neo4jChatMemoryRepository;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.preretrieval.query.expansion.MultiQueryExpander;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
@@ -20,9 +21,12 @@ public class SpringAiApplication {
         SpringApplication.run(SpringAiApplication.class, args);
     }
 
+//    public @Bean CqlSession session() {
+//        return CqlSession.builder().build();
+//    }
 
     @Bean
-    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore, ChatMemory chatMemory) {
+    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore, Neo4jChatMemoryRepository chatMemoryRepository) {
 
         RetrievalAugmentationAdvisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
                 .documentRetriever(VectorStoreDocumentRetriever.builder()
@@ -35,7 +39,9 @@ public class SpringAiApplication {
                 .build();
 
         MessageChatMemoryAdvisor chatMemoryAdvisor = MessageChatMemoryAdvisor
-                .builder(chatMemory)
+                .builder(MessageWindowChatMemory.builder()
+                        .chatMemoryRepository(chatMemoryRepository)
+                        .build())
                 .build();
 
         return chatClientBuilder

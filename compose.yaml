@@ -4,3 +4,17 @@ services:
     ports:
     - '6334:6334'
     - '6333:6333'
+#  cassandra:
+#    image: 'cassandra:latest'
+#    environment:
+#    - 'CASSANDRA_DC=dc1'
+#    - 'CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch'
+#    ports:
+#    - '9042:9042'
+  neo4j:
+    image: 'neo4j:latest'
+    environment:
+    - 'NEO4J_AUTH=neo4j/notverysecret'
+    ports:
+    - '7687:7687'
+    - '7474:7474'
