@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import ru.anblazhnov.springai.Service.QuestionService;
 import ru.anblazhnov.springai.model.Answer;
 import ru.anblazhnov.springai.model.Question;
+import ru.anblazhnov.springai.tools.TimeTools;
 
+import java.sql.Time;
 import java.util.Optional;
 
 @Service
@@ -22,8 +24,10 @@ public class QuestionServiceImpl implements QuestionService {
     private static final Logger log = LoggerFactory.getLogger(QuestionServiceImpl.class);
     private final ChatClient chatClient;
 
-    public QuestionServiceImpl(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
+    public QuestionServiceImpl(ChatClient.Builder chatClientBuilder, TimeTools timeTools) {
+        this.chatClient = chatClientBuilder
+                .defaultTools(timeTools)
+                .build();
     }
 
     @Value("classpath:/templates/masterTemplate.st")
@@ -33,10 +37,9 @@ public class QuestionServiceImpl implements QuestionService {
 
         ResponseEntity<ChatResponse, Answer> responseEntity = chatClient
                 .prompt()
-                .system(spec -> spec
-                        .text(masterTemplate)
-                        .param("scope", question.scope())
-                )
+//                .system(spec -> spec
+//                        .text(question.question())
+//                )
                 .user(question.question())
                 .call()
                 .responseEntity(Answer.class);

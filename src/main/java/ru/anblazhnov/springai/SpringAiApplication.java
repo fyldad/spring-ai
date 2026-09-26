@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
+import ru.anblazhnov.springai.tools.TimeTools;
 
 @SpringBootApplication
 @EnableRetry
@@ -21,12 +22,11 @@ public class SpringAiApplication {
         SpringApplication.run(SpringAiApplication.class, args);
     }
 
-//    public @Bean CqlSession session() {
-//        return CqlSession.builder().build();
-//    }
-
     @Bean
-    ChatClient chatClient(ChatClient.Builder chatClientBuilder, VectorStore vectorStore, Neo4jChatMemoryRepository chatMemoryRepository) {
+    ChatClient chatClient(ChatClient.Builder chatClientBuilder,
+                          VectorStore vectorStore,
+                          Neo4jChatMemoryRepository chatMemoryRepository
+    ) {
 
         RetrievalAugmentationAdvisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
                 .documentRetriever(VectorStoreDocumentRetriever.builder()
