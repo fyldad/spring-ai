@@ -7,6 +7,7 @@ import org.springframework.ai.chat.client.ResponseEntity;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
 import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,12 @@ public class QuestionServiceImpl implements QuestionService {
     private static final Logger log = LoggerFactory.getLogger(QuestionServiceImpl.class);
     private final ChatClient chatClient;
 
-    public QuestionServiceImpl(ChatClient.Builder chatClientBuilder, TimeTools timeTools) {
+    public QuestionServiceImpl(ChatClient.Builder chatClientBuilder,
+                               TimeTools timeTools,
+                               ToolCallbackProvider tools
+    ) {
         this.chatClient = chatClientBuilder
-                .defaultTools(timeTools)
+                .defaultTools(timeTools, tools)
                 .build();
     }
 

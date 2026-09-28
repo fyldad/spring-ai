@@ -5,8 +5,18 @@ spring:
       embedding:
         model: bge-m3
       chat:
-        model: llama3.1:8b
+#        model: llama3.1:8b
+        model: qwen2.5:14b
 #        model: qwen2.5-coder:14b
+#   https://github.com/mrkrsl/web-search-mcp
+    mcp:
+      client:
+        stdio:
+          connections:
+            web-search:
+              command: node
+              args:
+                - ${WEB-SEARCH-PATH}
 #    gigachat:
 #      auth:
 #        bearer:

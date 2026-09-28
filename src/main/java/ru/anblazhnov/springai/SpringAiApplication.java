@@ -1,5 +1,7 @@
 package ru.anblazhnov.springai;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
@@ -12,11 +14,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
-import ru.anblazhnov.springai.tools.TimeTools;
 
 @SpringBootApplication
 @EnableRetry
 public class SpringAiApplication {
+
+    private static final Logger log = LoggerFactory.getLogger(SpringAiApplication.class);
 
     static void main(String[] args) {
         SpringApplication.run(SpringAiApplication.class, args);
@@ -29,6 +32,11 @@ public class SpringAiApplication {
     ) {
 
         RetrievalAugmentationAdvisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
+                .documentPostProcessors((query,  documents) -> {
+                    log.info("retrieved {} documents on query: {}", documents.size(), query);
+                    documents.forEach(System.out::println);
+                    return documents;
+                })
                 .documentRetriever(VectorStoreDocumentRetriever.builder()
                         .vectorStore(vectorStore)
                         .topK(20)

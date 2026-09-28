@@ -29,15 +29,15 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
         String expression = getFilterExpression(question);
 
         return chatClient.prompt()
-                .system(spec -> spec
-                        .text(masterTemplate)
-                        .param("company", question.company())
-                )
+//                .system(spec -> spec
+//                        .text(masterTemplate)
+//                        .param("company", question.company())
+//                )
                 .user(question.question())
                 .advisors(advisorSpec ->
                         advisorSpec
                                 .param(FILTER_EXPRESSION, expression)
-                                .param(CONVERSATION_ID, "1")
+                                .param(CONVERSATION_ID, "2")
                 )
                 .call()
                 .content();
