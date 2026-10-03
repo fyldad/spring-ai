@@ -7,7 +7,7 @@ spring:
       chat:
 #        model: llama3.1:8b
         model: qwen2.5:14b
-#        model: qwen2.5-coder:14b
+#        model: qwen2.5-coder:14b # can not call tools
 #   https://github.com/mrkrsl/web-search-mcp
     mcp:
       client:
@@ -26,3 +26,13 @@ spring:
 #          ca-certs: ${GIGACHAT_CA_CERT}
 #      chat:
 #        temperature: 0.0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+
+otlp:
+  tracing:
+    url: http://localhost:4317

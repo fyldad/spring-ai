@@ -24,6 +24,10 @@ ext {
 }
 
 dependencies {
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation("org.springframework.ai:spring-ai-starter-mcp-client")
     implementation 'org.springframework.ai:spring-ai-starter-model-chat-memory-repository-neo4j'
     implementation 'org.springframework.boot:spring-boot-docker-compose'
