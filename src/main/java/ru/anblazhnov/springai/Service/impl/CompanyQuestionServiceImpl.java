@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.anblazhnov.springai.Service.CompanyQuestionService;
 import ru.anblazhnov.springai.model.CompanyQuestion;
 
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 import static org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever.FILTER_EXPRESSION;
 
@@ -34,21 +38,24 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
 //                        .param("company", question.company())
 //                )
                 .user(question.question())
-                .advisors(advisorSpec ->
-                        advisorSpec
-                                .param(FILTER_EXPRESSION, expression)
-                                .param(CONVERSATION_ID, "2")
+                .advisors(advisorSpec -> {
+                            advisorSpec.param(CONVERSATION_ID, "2");
+                            if (expression != null) {
+                                advisorSpec.param(FILTER_EXPRESSION, expression);
+                            }
+                        }
                 )
                 .call()
                 .content();
     }
 
     private String getFilterExpression(CompanyQuestion question) {
-        String expression = "scope == 'iflex'";
-        if (question.module() != null) {
-            expression += " && module == '" + question.module() + "'";
-        }
-        return expression;
+        if (question.metaDataFilter() == null) return null;
+
+        return question.metaDataFilter().entrySet().stream()
+                .map(e -> e.getKey() + " == " + e.getValue())
+                .collect(Collectors.joining(" && "));
+
     }
 
 }

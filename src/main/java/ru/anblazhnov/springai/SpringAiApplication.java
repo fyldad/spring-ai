@@ -8,6 +8,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.neo4j.Neo4jChatMemoryRepository;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.generation.augmentation.ContextualQueryAugmenter;
 import org.springframework.ai.rag.preretrieval.query.expansion.MultiQueryExpander;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -16,6 +17,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
+import ru.anblazhnov.springai.rag.SourceDocumentContext;
 
 @SpringBootApplication
 @EnableRetry
@@ -30,15 +32,20 @@ public class SpringAiApplication {
     @Bean
     ChatClient chatClient(ChatClient.Builder chatClientBuilder,
                           VectorStore vectorStore,
-                          Neo4jChatMemoryRepository chatMemoryRepository
+                          Neo4jChatMemoryRepository chatMemoryRepository,
+                          SourceDocumentContext sourceDocumentContext
     ) {
 
         RetrievalAugmentationAdvisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
-                .documentPostProcessors((query,  documents) -> {
+                .documentPostProcessors(sourceDocumentContext, (query, documents) -> {
                     log.info("retrieved {} documents on query: {}", documents.size(), query);
-                    documents.forEach(System.out::println);
+                    documents.forEach(document -> log.info("retrieved document {}",
+                            document.getText()));
                     return documents;
                 })
+                .queryAugmenter(ContextualQueryAugmenter.builder()
+                        .documentFormatter(sourceDocumentContext::format)
+                        .build())
                 .documentRetriever(VectorStoreDocumentRetriever.builder()
                         .vectorStore(vectorStore)
                         .topK(20)

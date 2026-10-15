@@ -8,6 +8,13 @@ spring:
 #        model: llama3.1:8b
         model: qwen2.5:14b
 #        model: qwen2.5-coder:14b # can not call tools
+    vectorstore:
+      qdrant:
+        # QdrantVectorStore removes this payload field and uses it as Document.text.
+        host: localhost
+        port: 6334
+        collection-name: vector_store
+        content-field-name: doc_content
 #   https://github.com/mrkrsl/web-search-mcp
     mcp:
       client:
@@ -36,3 +43,8 @@ management:
 otlp:
   tracing:
     url: http://localhost:4317
+
+app:
+  rag:
+    # Optional root of the ingest tool's parent_snapshot/source_snapshot files.
+    snapshot-directory: ${SOURCE_SNAPSHOT_DIRECTORY:}
