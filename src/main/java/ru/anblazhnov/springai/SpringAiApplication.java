@@ -48,7 +48,7 @@ public class SpringAiApplication {
                         .build())
                 .documentRetriever(VectorStoreDocumentRetriever.builder()
                         .vectorStore(vectorStore)
-                        .topK(20)
+//                        .topK(20)
                         .build())
                 .queryExpander(MultiQueryExpander.builder()
                         .chatClientBuilder(chatClientBuilder.clone())
