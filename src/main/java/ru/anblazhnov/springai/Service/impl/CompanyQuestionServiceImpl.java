@@ -9,6 +9,7 @@ import ru.anblazhnov.springai.model.CompanyQuestion;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
@@ -31,6 +32,7 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
     public String askQuestion(CompanyQuestion question) {
 
         String expression = getFilterExpression(question);
+        String userId = UUID.randomUUID().toString();
 
         return chatClient.prompt()
 //                .system(spec -> spec
@@ -39,7 +41,7 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
 //                )
                 .user(question.question())
                 .advisors(advisorSpec -> {
-                            advisorSpec.param(CONVERSATION_ID, "2");
+                            advisorSpec.param(CONVERSATION_ID, userId);
                             if (expression != null) {
                                 advisorSpec.param(FILTER_EXPRESSION, expression);
                             }
