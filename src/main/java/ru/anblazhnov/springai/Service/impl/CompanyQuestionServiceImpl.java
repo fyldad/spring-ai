@@ -1,16 +1,15 @@
 package ru.anblazhnov.springai.Service.impl;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.vectorstore.filter.Filter;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import ru.anblazhnov.springai.Service.CompanyQuestionService;
 import ru.anblazhnov.springai.model.CompanyQuestion;
 
-import java.util.Collections;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 import static org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever.FILTER_EXPRESSION;
@@ -31,7 +30,7 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
     @Override
     public String askQuestion(CompanyQuestion question) {
 
-        String expression = getFilterExpression(question);
+        Filter.Expression expression = getFilterExpression(question);
         String userId = UUID.randomUUID().toString();
 
         return chatClient.prompt()
@@ -51,12 +50,15 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
                 .content();
     }
 
-    private String getFilterExpression(CompanyQuestion question) {
+    private Filter.Expression getFilterExpression(CompanyQuestion question) {
         if (question.metaDataFilter() == null) return null;
 
+        var builder = new FilterExpressionBuilder();
         return question.metaDataFilter().entrySet().stream()
-                .map(e -> e.getKey() + " == " + e.getValue())
-                .collect(Collectors.joining(" && "));
+                .map(e -> builder.eq(e.getKey(), e.getValue()))
+                .reduce(builder::and)
+                .map(FilterExpressionBuilder.Op::build)
+                .orElse(null);
 
     }
 

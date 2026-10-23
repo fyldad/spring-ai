@@ -16,14 +16,14 @@ spring:
         collection-name: vector_store
         content-field-name: doc_content
 #   https://github.com/mrkrsl/web-search-mcp
-    mcp:
-      client:
-        stdio:
-          connections:
-            web-search:
-              command: node
-              args:
-                - ${WEB-SEARCH-PATH}
+#    mcp:
+#      client:
+#        stdio:
+#          connections:
+#            web-search:
+#              command: node
+#              args:
+#                - ${WEB-SEARCH-PATH}
 #    gigachat:
 #      auth:
 #        bearer:
