@@ -8,11 +8,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import ru.anblazhnov.springai.Service.CompanyQuestionService;
 import ru.anblazhnov.springai.model.CompanyQuestion;
+import ru.anblazhnov.springai.model.MetaDataFilter;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
 import static org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever.FILTER_EXPRESSION;
+import static ru.anblazhnov.springai.model.MetaDataFilter.CompareType.OR;
 
 
 @Service
@@ -51,15 +54,26 @@ public class CompanyQuestionServiceImpl implements CompanyQuestionService {
     }
 
     private Filter.Expression getFilterExpression(CompanyQuestion question) {
-        if (question.metaDataFilter() == null) return null;
+        List<MetaDataFilter> filters = question.metaDataFilter();
+        if (filters == null || filters.isEmpty()) {
+            return null;
+        }
 
         var builder = new FilterExpressionBuilder();
-        return question.metaDataFilter().entrySet().stream()
-                .map(e -> builder.eq(e.getKey(), e.getValue()))
-                .reduce(builder::and)
-                .map(FilterExpressionBuilder.Op::build)
-                .orElse(null);
+        FilterExpressionBuilder.Op expression = null;
 
+        for (MetaDataFilter filter : filters) {
+            FilterExpressionBuilder.Op current = builder.eq(filter.field(), filter.value());
+            if (expression == null) {
+                expression = current;
+            } else if (filter.type() == OR) {
+                expression = builder.or(expression, current);
+            } else {
+                expression = builder.and(expression, current);
+            }
+        }
+
+        return expression == null ? null : expression.build();
     }
 
 }

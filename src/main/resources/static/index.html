@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company Ask</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <p class="eyebrow">Spring AI · RAG</p>
+      <h1>Company Ask</h1>
+      <p class="lede">Query your document store with optional metadata filters.</p>
+    </header>
+
+    <main class="panel">
+      <form id="ask-form" novalidate>
+        <section class="section">
+          <label class="label" for="question">Question</label>
+          <textarea
+            id="question"
+            name="question"
+            rows="4"
+            placeholder="Ask something about your company documents…"
+            required
+          ></textarea>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>Metadata filters</h2>
+              <p class="hint">Match documents by payload fields. Combine with AND / OR.</p>
+            </div>
+            <button type="button" class="btn btn-ghost" id="add-filter">
+              <span aria-hidden="true">+</span> Add filter
+            </button>
+          </div>
+          <div id="filters" class="filters" aria-live="polite"></div>
+          <p class="empty-filters" id="empty-filters">No filters — all documents are eligible.</p>
+        </section>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="submit-btn">Ask</button>
+          <button type="button" class="btn btn-ghost" id="clear-btn">Clear</button>
+        </div>
+      </form>
+
+      <section class="section result" id="result-section" hidden>
+        <div class="section-head">
+          <h2>Answer</h2>
+        </div>
+        <div class="answer" id="answer"></div>
+        <p class="error" id="error" hidden></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay" id="overlay" hidden aria-busy="true" aria-live="assertive">
+    <div class="spinner-card">
+      <div class="spinner" role="status" aria-label="Loading"></div>
+      <p>Waiting for answer…</p>
+    </div>
+  </div>
+
+  <template id="filter-row-template">
+    <div class="filter-row">
+      <select class="filter-type" aria-label="Combine with previous filter" title="How this filter combines with the previous one">
+        <option value="AND">AND</option>
+        <option value="OR">OR</option>
+      </select>
+      <select class="filter-field" aria-label="Metadata field" required>
+        <option value="" disabled selected>Field…</option>
+      </select>
+      <input class="filter-value" type="text" placeholder="Value" aria-label="Filter value" required />
+      <button type="button" class="btn btn-icon remove-filter" aria-label="Remove filter" title="Remove">×</button>
+    </div>
+  </template>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -11,6 +11,8 @@ import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.generation.augmentation.ContextualQueryAugmenter;
 import org.springframework.ai.rag.preretrieval.query.expansion.MultiQueryExpander;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
 import ru.anblazhnov.springai.rag.SourceDocumentContext;
+import ru.anblazhnov.springai.tools.TimeTools;
 
 @SpringBootApplication
 @EnableRetry
@@ -27,6 +30,13 @@ public class SpringAiApplication {
 
     static void main(String[] args) {
         SpringApplication.run(SpringAiApplication.class, args);
+    }
+
+    @Bean
+    ToolCallbackProvider productTools(TimeTools timeTools) {
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(timeTools)
+                .build();
     }
 
     @Bean

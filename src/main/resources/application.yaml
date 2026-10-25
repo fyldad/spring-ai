@@ -12,6 +12,7 @@ spring:
       qdrant:
         # QdrantVectorStore removes this payload field and uses it as Document.text.
         host: localhost
+#        host: 192.168.1.23
         port: 6334
         collection-name: vector_store
         content-field-name: doc_content

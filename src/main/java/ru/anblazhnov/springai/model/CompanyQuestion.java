@@ -2,9 +2,10 @@ package ru.anblazhnov.springai.model;
 
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.Map;
+import java.util.List;
 
-public record CompanyQuestion (
+public record CompanyQuestion(
         @NotBlank(message = "question is required") String question,
-        Map<String, String> metaDataFilter
-) { }
+        List<MetaDataFilter> metaDataFilter
+) {
+}
